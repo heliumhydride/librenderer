@@ -1,0 +1,5 @@
+o/*
+*/*.o
+*.o
+librenderer.so.1
+librenderer.a
