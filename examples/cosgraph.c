@@ -18,14 +18,14 @@ int main(void) {
 
   // TODO for every x from 0 to 'cols', graph the cos(x)
 
-  add_pixel(pixelmap, 1,0,1.0f);
-  render_pixelmap(pixelmap);
-
   /*
+  add_pixel(pixelmap, 0,1,1.0f);
+  render_pixelmap(pixelmap);
+  */
+
   for(int x = 0; x < cols; x++) {
-    add_pixel(pixelmap, (int)(cos(x)*5), (int)rows/2, 1.0f);
+    add_pixel(pixelmap, (int)rows/2, (int)(cos(x)*10), 1.0f);
     render_pixelmap(pixelmap);
   }
-  */
   return 0;
 }

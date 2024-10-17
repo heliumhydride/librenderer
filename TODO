@@ -1,3 +1,4 @@
+fix mkline segfaults
 fix mkpixel x y orientation
 cosgraph example
-add to git repo
+snake game example

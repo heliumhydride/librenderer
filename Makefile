@@ -19,7 +19,7 @@ librenderer.a: librenderer.o
 util.o: util.c
 	$(CC) -c -lsodium $(CFLAGS) -o util.o util.c
 
-examples: o/bball o/randpix o/randline o/cosgraph
+examples: o/bball o/randpix o/randline o/cosgraph o/snake
 
 examples/bball.o: examples/bball.c
 	$(CC) -c -lsodium $(CFLAGS) -o examples/bball.o examples/bball.c
@@ -44,6 +44,12 @@ examples/cosgraph.o: examples/cosgraph.c
 
 o/cosgraph: examples/cosgraph.o librenderer.a
 	$(CC) $(CFLAGS) -o o/cosgraph examples/cosgraph.o librenderer.a -lm
+
+examples/snake.o: examples/snake.c
+	$(CC) -c $(CFLAGS) -o examples/snake.o examples/snake.c
+
+o/snake: examples/snake.o librenderer.a
+	$(CC) -lsodium $(CFLAGS) -o o/snake examples/snake.o util.o librenderer.a
 
 clean:
 	rm -rf *.o examples/*.o *.so* *.a o/*
