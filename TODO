@@ -1,3 +1,4 @@
+make a README.md
 fix mkline segfaults
 fix mkpixel x y orientation
 cosgraph example
