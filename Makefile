@@ -51,6 +51,12 @@ examples/snake.o: examples/snake.c
 o/snake: examples/snake.o librenderer.a
 	$(CC) -lsodium $(CFLAGS) -o o/snake examples/snake.o util.o librenderer.a
 
+examples/snake.o: examples/snake.c
+	$(CC) -c $(CFLAGS) -o examples/snake.o examples/snake.c
+
+o/complex_rotation: examples/complex_rotation.o librenderer.a
+	$(CC) -lsodium $(CFLAGS) -o o/complex_rotation examples/complex_rotation.o util.o librenderer.a
+
 clean:
 	rm -rf *.o examples/*.o *.so* *.a o/*
 
