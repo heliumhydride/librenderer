@@ -1,6 +1,5 @@
 make a README.md
 fix mkline segfaults
 fix mkpixel x y orientation
-cosgraph example
 snake game example
 complex_rotation example (use complex numbers to rotate points on a graph around the origin)

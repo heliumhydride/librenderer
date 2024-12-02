@@ -16,15 +16,8 @@ int main(void) {
 
   printf("\033[s"); // save cursor position
 
-  // TODO for every x from 0 to 'cols', graph the cos(x)
-
-  /*
-  add_pixel(pixelmap, 0,1,1.0f);
-  render_pixelmap(pixelmap);
-  */
-
   for(int x = 0; x < cols; x++) {
-    add_pixel(pixelmap, (int)rows/2, (int)(cos(x)*10), 1.0f);
+    add_pixel(pixelmap, (int)(rows/2 + cos(x)*1.1), x, 1.0f);
     render_pixelmap(pixelmap);
   }
   return 0;
