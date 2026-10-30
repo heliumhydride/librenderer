@@ -1,14 +1,3 @@
-create a readme:
-    with usage guide
-        define LIBRENDERER_IMPLEMENTATION
-        optional LIBRENDERER_NOPREFIX
-        include librenderer.h
-        display is like a local librenderer context
-        LIBRENDERER_NOCOLOR and LIBRENDERER_GRAYSCALE_THRESHOLD
-    description of available functionality
-    guide on optional compilation of librenderer.so/librenderer.a
-    guide on compiling examples (some require libsodium, specify that and give link)
-
 make more functions:
     empty/filled rectangles
     circles
