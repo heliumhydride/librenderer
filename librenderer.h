@@ -100,7 +100,7 @@ void librenderer_showdisplay(librenderer_displaycontext_t display)
 
     for(size_t y = 0; y < display.height; y+=2) {
         printf(VERTICAL_BAR);
-        for(size_t x = 0; x < display.height; ++x) {
+        for(size_t x = 0; x < display.width; ++x) {
             librenderer_pixel_t pixel1 = display.data[y*display.width + x];
             librenderer_pixel_t pixel2 = display.data[(y+1)*display.width + x];
 
