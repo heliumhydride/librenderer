@@ -4,6 +4,7 @@ create a readme:
         optional LIBRENDERER_NOPREFIX
         include librenderer.h
         display is like a local librenderer context
+        LIBRENDERER_NOCOLOR and LIBRENDERER_GRAYSCALE_THRESHOLD
     description of available functionality
     guide on optional compilation of librenderer.so/librenderer.a
     guide on compiling examples (some require libsodium, specify that and give link)
@@ -13,12 +14,9 @@ make more functions:
     circles
 
 examples:
-    bball
     snake
     raycast
     pong
-    quadratic_graph: plot x^2 on a graph
-    randpix: random color/pos pixels
 
 possibly dynamic height/width ? need posix and win32 way of computing term size
 texture (declare a matrix of pixels and paste image on screen)

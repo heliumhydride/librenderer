@@ -16,8 +16,7 @@ librenderer.a: librenderer.o
 
 # --- Examples & related ---
 
-EXAMPLES = examples/test examples/randpix examples/randline examples/bball examples/quadratic_graph
-# EXAMPLES = examples/test examples/randpix examples/randline examples/bball examples/quadratic_graph examples/snake examples/raycast examples/pong
+EXAMPLES = examples/test examples/randpix examples/randline examples/bball examples/quadratic_graph examples/pong examples/snake examples/raycast
 
 examples: $(EXAMPLES)
 
