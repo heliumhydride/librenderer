@@ -20,8 +20,6 @@ examples:
     quadratic_graph: plot x^2 on a graph
     randpix: random color/pos pixels
 
-use color
-allow LIBRENDERER_NOCOLOR and calculate black/white color
 possibly dynamic height/width ? need posix and win32 way of computing term size
 texture (declare a matrix of pixels and paste image on screen)
 write documentation man(3) pages for each function
