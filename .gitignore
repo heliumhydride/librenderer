@@ -1,5 +1,11 @@
-o/*
-*/*.o
-*.o
-librenderer.so.1
+librenderer.so
+librenderer.o
 librenderer.a
+examples/test
+examples/randpix
+examples/randline
+examples/bball
+examples/snake
+examples/raycast
+examples/pong
+examples/quadratic_graph

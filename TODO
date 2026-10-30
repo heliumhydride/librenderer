@@ -1,5 +1,27 @@
-make a README.md
-fix mkline segfaults
-fix mkpixel x y orientation
-snake game example
-complex_rotation example (use complex numbers to rotate points on a graph around the origin)
+create a readme:
+    with usage guide
+        define LIBRENDERER_IMPLEMENTATION
+        optional LIBRENDERER_NOPREFIX
+        include librenderer.h
+        display is like a local librenderer context
+    description of available functionality
+    guide on optional compilation of librenderer.so/librenderer.a
+    guide on compiling examples (some require libsodium, specify that and give link)
+
+make more functions:
+    empty/filled rectangles
+    circles
+
+examples:
+    bball
+    snake
+    raycast
+    pong
+    quadratic_graph: plot x^2 on a graph
+    randpix: random color/pos pixels
+
+use color
+allow LIBRENDERER_NOCOLOR and calculate black/white color
+possibly dynamic height/width ? need posix and win32 way of computing term size
+texture (declare a matrix of pixels and paste image on screen)
+write documentation man(3) pages for each function
