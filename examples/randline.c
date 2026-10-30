@@ -1,42 +1,32 @@
-#define _XOPEN_SOURCE   600
-#define _POSIX_C_SOURCE 200112L
-
-/// Useful includes
-#include <stdio.h>
-//#include <stdlib.h>
-//#include <getopt.h>
-//#include <unistd.h>
-//#include <string.h>
+#define _XOPEN_SOURCE 500
+#define LIBRENDERER_NOPREFIX
+#define LIBRENDERER_IMPLEMENTATION
 #include "../librenderer.h"
-#include "../util.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 
-int main(void) {
-  if(sodium_init() == -1) {
-    fprintf(stderr, "sodium_init() failed\n");
-    return 2;
-  }
+int main(void)
+{
+    puts("\033[7;33m/!\\ EPILESPY WARNING /!\\\033[0m");
+    puts("You have 3 seconds to press CTRL+C");
+    sleep(3);
 
-  char pixelmap[rows][cols];
-  init_pxmap(pixelmap);
+    srand(time(NULL));
+    displaycontext_t disp = initdisplay(40,40);
 
-  printf("\033[s"); // save cursor position
+    for(size_t t = 0; t < disp.width*disp.height*2; ++t) {
+        int x0 = rand() % disp.width;
+        int y0 = rand() % disp.height;
+        int x1 = rand() % disp.width;
+        int y1 = rand() % disp.height;
+        uint32_t color = rand() % 0x1000000;
+        drawline(&disp, color, x0, y0, x1, y1);
+        showdisplay(disp);
+        usleep(10000);
+    }
 
-  // TODO these lines segfault
-  //mkline(pixelmap,15,58,4,15);
-  //mkline(pixelmap,14,13,20,73);
-  //mkline(pixelmap,5,29,11,66);
-  //mkline(pixelmap,0,25,80,0);
-
-  mkline(pixelmap,3,35,13,6);
-  mkline(pixelmap,0,0,80,25);
-  int a,b,c,d;
-  while(1) {
-    a = randint(1,rows-1); b = randint(1,cols-1);
-    c = randint(1,rows-1); d = randint(1,cols-1);
-    render_pixelmap(pixelmap);
-    printf("\n\n    (%d;%d) -> (%d;%d)      \n",a,b,c,d);
-    mkline(pixelmap,a,b,c,d);
-    usleep(200000);
-  }
-  return 0;
+    destroydisplay(&disp);
+    return 0;
 }
