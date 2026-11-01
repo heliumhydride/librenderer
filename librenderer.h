@@ -32,6 +32,8 @@ void librenderer_showdisplay(librenderer_displaycontext_t display);
 void librenderer_plotpixel(librenderer_displaycontext_t* dp, uint32_t color, int x, int y);
 void librenderer_destroydisplay(librenderer_displaycontext_t* dp);
 void librenderer_resetdisplay(librenderer_displaycontext_t* dp);
+void librenderer_helper_swap(int* a, int* b);
+int librenderer_helper_absi(int a);
 void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1);
 
 #ifdef LIBRENDERER_NOPREFIX
@@ -43,6 +45,8 @@ void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int 
 #define showdisplay        librenderer_showdisplay
 #define plotpixel          librenderer_plotpixel
 #define resetdisplay       librenderer_resetdisplay
+#define helper_swapi       librenderer_helper_swapi
+#define helper_absi       librenderer_helper_absi
 #define drawline           librenderer_drawline
 #endif // LIBRENDERER_NOPREFIX
 
@@ -156,14 +160,14 @@ void librenderer_resetdisplay(librenderer_displaycontext_t* dp)
     memset(dp->data, 0, dp->width * dp->height * sizeof(librenderer_pixel_t));
 }
 
-void _helper_swap(int* a, int* b)
+void librenderer_helper_swapi(int* a, int* b)
 {
     int tmp = *a;
     *a = *b;
     *b = tmp;
 }
 
-int _helper_absi(int a)
+int librenderer_helper_absi(int a)
 {
     if(a < 0) return -a;
     return a;
