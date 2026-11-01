@@ -16,7 +16,7 @@ librenderer.a: librenderer.o
 
 # --- Examples & related ---
 
-EXAMPLES = examples/test examples/randpix examples/randline examples/bball examples/quadratic_graph examples/pong examples/snake examples/raycast
+EXAMPLES = examples/test examples/randpix examples/randline examples/bball examples/quadratic_graph examples/pong examples/resize examples/snake examples/raycast
 
 examples: $(EXAMPLES)
 
@@ -33,6 +33,12 @@ examples/bball: examples/bball.c librenderer.h
 	$(CC) $(CFLAGS) $< -o $@
 
 examples/quadratic_graph: examples/quadratic_graph.c librenderer.h
+	$(CC) $(CFLAGS) $< -o $@
+
+examples/pong: examples/pong.c librenderer.h
+	$(CC) $(CFLAGS) $< -o $@
+
+examples/resize: examples/resize.c librenderer.h
 	$(CC) $(CFLAGS) $< -o $@
 
 # --- Cleanup code ---

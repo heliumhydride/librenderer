@@ -32,9 +32,11 @@ void librenderer_showdisplay(librenderer_displaycontext_t display);
 void librenderer_plotpixel(librenderer_displaycontext_t* dp, uint32_t color, int x, int y);
 void librenderer_destroydisplay(librenderer_displaycontext_t* dp);
 void librenderer_resetdisplay(librenderer_displaycontext_t* dp);
-void librenderer_helper_swap(int* a, int* b);
+void librenderer_clear_color_display(librenderer_displaycontext_t* dp, uint32_t color);
+void librenderer_helper_swapi(int* a, int* b);
 int librenderer_helper_absi(int a);
 void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1);
+void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, size_t height);
 
 #ifdef LIBRENDERER_NOPREFIX
 #define displaycontext_t   librenderer_displaycontext_t
@@ -45,9 +47,11 @@ void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int 
 #define showdisplay        librenderer_showdisplay
 #define plotpixel          librenderer_plotpixel
 #define resetdisplay       librenderer_resetdisplay
+#define clear_color_display librenderer_clear_color_display
 #define helper_swapi       librenderer_helper_swapi
-#define helper_absi       librenderer_helper_absi
+#define helper_absi        librenderer_helper_absi
 #define drawline           librenderer_drawline
+#define resizedisplay      librenderer_resizedisplay
 #endif // LIBRENDERER_NOPREFIX
 
 #ifndef LIBRENDERER_GRAYSCALE_THRESHOLD
@@ -160,6 +164,14 @@ void librenderer_resetdisplay(librenderer_displaycontext_t* dp)
     memset(dp->data, 0, dp->width * dp->height * sizeof(librenderer_pixel_t));
 }
 
+void librenderer_clear_color_display(librenderer_displaycontext_t* dp, uint32_t color) {
+    for(size_t x = 0; x < dp->width; ++x) {
+        for(size_t y = 0; y < dp->height; ++y) {
+            librenderer_plotpixel(dp, color, x, y);
+        }
+    }
+}
+
 void librenderer_helper_swapi(int* a, int* b)
 {
     int tmp = *a;
@@ -175,15 +187,15 @@ int librenderer_helper_absi(int a)
 
 void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1)
 {
-    int steep = _helper_absi(y1 - y0) > _helper_absi(x1 - x0);
+    int steep = librenderer_helper_absi(y1 - y0) > librenderer_helper_absi(x1 - x0);
     if(steep) {
-        _helper_swap(&x0, &y0);
-        _helper_swap(&x1, &y1);
+        librenderer_helper_swapi(&x0, &y0);
+        librenderer_helper_swapi(&x1, &y1);
     }
 
     if (x0 > x1) {
-        _helper_swap(&x0, &x1);
-        _helper_swap(&y0, &y1);
+        librenderer_helper_swapi(&x0, &x1);
+        librenderer_helper_swapi(&y0, &y1);
     }
 
     int dx = x1 - x0;
@@ -207,6 +219,15 @@ void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int 
 void librenderer_destroydisplay(librenderer_displaycontext_t* dp)
 {
     free(dp->data);
+}
+
+void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, size_t height)
+{
+    dp->width = width;
+    dp->height = height;
+    dp->data = realloc(dp->data, width * height * sizeof(librenderer_pixel_t));
+    if(dp->data == NULL)
+        __ERROR("could not allocate sufficient memory for to resize display");
 }
 
 #endif // LIBRENDERER_IMPLEMENTATION

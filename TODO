@@ -2,8 +2,6 @@ rectangles
     enums LIBRENDERER_RECT_{LINE,FILLED}
         and corresponding noprefix shortcut macros
 
-allow resizing display contexts
-
 how to put text on screen????
     function to put text on screen, use ansi escapes to move to correct start position of text
     enum for wordwrap LIBRENDERER_TEXT_WRAP_{CHARS,WORDS,NONE} (whether to do character/word wrapping, or none[end str if out of screen])
