@@ -3,9 +3,6 @@ how to put text on screen????
     enum for wordwrap LIBRENDERER_TEXT_WRAP_{CHARS,WORDS,NONE} (whether to do character/word wrapping, or none[end str if out of screen])
         corresponding macros for noprefix (TEXT_WRAP_CHARS, ...)
 
-make more functions:
-    circles
-
 examples:
     snake
     raycast

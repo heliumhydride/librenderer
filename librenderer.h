@@ -28,9 +28,9 @@ typedef struct {
 } librenderer_displaycontext_t;
 
 typedef enum {
-    LIBRENDERER_RECT_FILLED,
-    LIBRENDERER_RECT_EMPTY
-} librenderer_rectangle_style;
+    LIBRENDERER_SHAPE_FILLED,
+    LIBRENDERER_SHAPE_EMPTY
+} librenderer_shape_style;
 
 librenderer_displaycontext_t librenderer_initdisplay(size_t width, size_t height);
 void librenderer_showdisplay(librenderer_displaycontext_t display);
@@ -42,7 +42,8 @@ void librenderer_helper_swapi(int* a, int* b);
 int librenderer_helper_absi(int a);
 void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1);
 void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, size_t height);
-void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_rectangle_style style);
+void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_shape_style style);
+void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, int radius, librenderer_shape_style style);
 
 #ifdef LIBRENDERER_NOPREFIX
 #define displaycontext_t   librenderer_displaycontext_t
@@ -58,8 +59,9 @@ void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int 
 #define drawline           librenderer_drawline
 #define resizedisplay      librenderer_resizedisplay
 #define drawrect           librenderer_drawrect
-#define RECT_FILLED        LIBRENDERER_RECT_FILLED
-#define RECT_EMPTY         LIBRENDERER_RECT_EMPTY
+#define drawcircle         librenderer_drawcircle
+#define SHAPE_FILLED       LIBRENDERER_SHAPE_FILLED
+#define SHAPE_EMPTY        LIBRENDERER_SHAPE_EMPTY
 #endif // LIBRENDERER_NOPREFIX
 
 #ifndef LIBRENDERER_GRAYSCALE_THRESHOLD
@@ -238,14 +240,32 @@ void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, s
         __ERROR("could not allocate sufficient memory for to resize display");
 }
 
-void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_rectangle_style style) {
+void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_shape_style style) {
     librenderer_drawline(dp, color, x, y, x+width, y);
     librenderer_drawline(dp, color, x, y+height, x+width+1, y+height);
     librenderer_drawline(dp, color, x, y, x, y+height);
     librenderer_drawline(dp, color, x+width, y, x+width, y+height);
-    if(style == LIBRENDERER_RECT_FILLED) {
+    if(style == LIBRENDERER_SHAPE_FILLED) {
         for(int i = 0; i < (signed)width; ++i)
             librenderer_drawline(dp, color, x+i, y, x+i, y+height);
+    }
+}
+
+void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, int radius, librenderer_shape_style style) {
+    int radius_squared = radius * radius;
+    for(int x_i = -radius; x_i < radius; ++x_i) {
+        for(int y_i = -radius; y_i < radius; ++y_i) {
+            switch(style) {
+                case LIBRENDERER_SHAPE_FILLED:
+                    if((x_i*x_i + y_i*y_i) < radius_squared)
+                        librenderer_plotpixel(dp, color, x+x_i, y+y_i);
+                    break;
+                case LIBRENDERER_SHAPE_EMPTY:
+                    if((x_i*x_i + y_i*y_i) == radius_squared)
+                        librenderer_plotpixel(dp, color, x+x_i, y+y_i);
+                    break;
+            }
+        }
     }
 }
 
