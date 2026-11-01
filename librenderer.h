@@ -27,6 +27,11 @@ typedef struct {
     librenderer_pixel_t* data;
 } librenderer_displaycontext_t;
 
+typedef enum {
+    LIBRENDERER_RECT_FILLED,
+    LIBRENDERER_RECT_EMPTY
+} librenderer_rectangle_style;
+
 librenderer_displaycontext_t librenderer_initdisplay(size_t width, size_t height);
 void librenderer_showdisplay(librenderer_displaycontext_t display);
 void librenderer_plotpixel(librenderer_displaycontext_t* dp, uint32_t color, int x, int y);
@@ -37,12 +42,12 @@ void librenderer_helper_swapi(int* a, int* b);
 int librenderer_helper_absi(int a);
 void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1);
 void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, size_t height);
+void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_rectangle_style style);
 
 #ifdef LIBRENDERER_NOPREFIX
 #define displaycontext_t   librenderer_displaycontext_t
 #define pixel_t            librenderer_pixel_t
 #define initdisplay        librenderer_initdisplay
-#define mkrect             librenderer_mkrect
 #define destroydisplay     librenderer_destroydisplay
 #define showdisplay        librenderer_showdisplay
 #define plotpixel          librenderer_plotpixel
@@ -52,6 +57,9 @@ void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, s
 #define helper_absi        librenderer_helper_absi
 #define drawline           librenderer_drawline
 #define resizedisplay      librenderer_resizedisplay
+#define drawrect           librenderer_drawrect
+#define RECT_FILLED        LIBRENDERER_RECT_FILLED
+#define RECT_EMPTY         LIBRENDERER_RECT_EMPTY
 #endif // LIBRENDERER_NOPREFIX
 
 #ifndef LIBRENDERER_GRAYSCALE_THRESHOLD
@@ -228,6 +236,17 @@ void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, s
     dp->data = realloc(dp->data, width * height * sizeof(librenderer_pixel_t));
     if(dp->data == NULL)
         __ERROR("could not allocate sufficient memory for to resize display");
+}
+
+void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_rectangle_style style) {
+    librenderer_drawline(dp, color, x, y, x+width, y);
+    librenderer_drawline(dp, color, x, y+height, x+width+1, y+height);
+    librenderer_drawline(dp, color, x, y, x, y+height);
+    librenderer_drawline(dp, color, x+width, y, x+width, y+height);
+    if(style == LIBRENDERER_RECT_FILLED) {
+        for(int i = 0; i < (signed)width; ++i)
+            librenderer_drawline(dp, color, x+i, y, x+i, y+height);
+    }
 }
 
 #endif // LIBRENDERER_IMPLEMENTATION
