@@ -1,3 +1,14 @@
+rectangles
+    enums LIBRENDERER_RECT_{LINE,FILLED}
+        and corresponding noprefix shortcut macros
+
+allow resizing display contexts
+
+how to put text on screen????
+    function to put text on screen, use ansi escapes to move to correct start position of text
+    enum for wordwrap LIBRENDERER_TEXT_WRAP_{CHARS,WORDS,NONE} (whether to do character/word wrapping, or none[end str if out of screen])
+        corresponding macros for noprefix (TEXT_WRAP_CHARS, ...)
+
 make more functions:
     empty/filled rectangles
     circles
@@ -9,4 +20,4 @@ examples:
 
 possibly dynamic height/width ? need posix and win32 way of computing term size
 texture (declare a matrix of pixels and paste image on screen)
-write documentation man(3) pages for each function
+fasm-style plain text documentation
