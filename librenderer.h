@@ -94,6 +94,20 @@ void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, in
     #define UPPER_RIGHT_CORNER "\xe2\x94\x90"
 #endif // NO_UTF8
 
+#ifdef LIBRENDERER_NOFRAME
+    #undef VERTICAL_BAR
+    #undef HORIZONTAL_BAR
+    #undef LOWER_LEFT_CORNER
+    #undef LOWER_RIGHT_CORNER
+    #undef UPPER_LEFT_CORNER
+    #undef UPPER_RIGHT_CORNER
+    #define VERTICAL_BAR       ""
+    #define HORIZONTAL_BAR     ""
+    #define LOWER_LEFT_CORNER  ""
+    #define LOWER_RIGHT_CORNER ""
+    #define UPPER_LEFT_CORNER  ""
+    #define UPPER_RIGHT_CORNER ""
+#endif
 
 #ifdef LIBRENDERER_IMPLEMENTATION
 
@@ -117,11 +131,15 @@ librenderer_displaycontext_t librenderer_initdisplay(size_t width, size_t height
 void librenderer_showdisplay(librenderer_displaycontext_t display)
 {
     printf("\033[H\033[J" UPPER_LEFT_CORNER);
+    #ifndef LIBRENDERER_NOFRAME
     for(size_t i = 0; i < display.width; ++i) printf(HORIZONTAL_BAR);
     printf(UPPER_RIGHT_CORNER "\n");
+    #endif
 
     for(size_t y = 0; y < display.height; y+=2) {
+        #ifndef LIBRENDERER_NOFRAME
         printf(VERTICAL_BAR);
+        #endif
         for(size_t x = 0; x < display.width; ++x) {
             librenderer_pixel_t pixel1 = display.data[y*display.width + x];
             librenderer_pixel_t pixel2 = display.data[(y+1)*display.width + x];
@@ -158,14 +176,15 @@ void librenderer_showdisplay(librenderer_displaycontext_t display)
                 (void)pixel1; (void)pixel2;
                 __ERROR("invalid color mode");
             #endif // LIBRENDERER_COLOR_MODE
-
         }
         printf("\033[0m"VERTICAL_BAR"\n");
     }
 
+    #ifndef LIBRENDERER_NOFRAME
     printf(LOWER_LEFT_CORNER);
     for(size_t i = 0; i < display.width; ++i) printf(HORIZONTAL_BAR);
     printf(LOWER_RIGHT_CORNER "\n");
+    #endif
 }
 
 void librenderer_plotpixel(librenderer_displaycontext_t* dp, uint32_t color, int x, int y)
