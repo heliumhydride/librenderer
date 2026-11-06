@@ -2,7 +2,7 @@
 
     librenderer
 
-    see README.md
+    see README.md and doc/librenderer.txt
 
     made with ♡ by heliumhydride
 
@@ -68,6 +68,10 @@ void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, in
 #define LIBRENDERER_GRAYSCALE_THRESHOLD 40
 #endif
 
+#ifndef LIBRENDERER_COLOR_MODE
+#define LIBRENDERER_COLOR_MODE 0x24
+#endif
+
 #ifdef LIBRENDERER_NO_UTF8
     #define UPPER_HALF_BLOCK   "^"
     #define LOWER_HALF_BLOCK   "_"
@@ -122,32 +126,39 @@ void librenderer_showdisplay(librenderer_displaycontext_t display)
             librenderer_pixel_t pixel1 = display.data[y*display.width + x];
             librenderer_pixel_t pixel2 = display.data[(y+1)*display.width + x];
 
-            #ifdef LIBRENDERER_NOCOLOR
-            uint8_t pixel1_gray = (uint8_t)(0.2126*(float)pixel1.r + 0.7152*(float)pixel1.g + 0.0722*(float)pixel1.b);
-            uint8_t pixel2_gray = (uint8_t)(0.2126*(float)pixel2.r + 0.7152*(float)pixel2.g + 0.0722*(float)pixel2.b);
+            #if LIBRENDERER_COLOR_MODE == 0x0
+                uint8_t pixel1_gray = (uint8_t)(0.2126*(float)pixel1.r + 0.7152*(float)pixel1.g + 0.0722*(float)pixel1.b);
+                uint8_t pixel2_gray = (uint8_t)(0.2126*(float)pixel2.r + 0.7152*(float)pixel2.g + 0.0722*(float)pixel2.b);
 
-            uint8_t char_state = (pixel1_gray > LIBRENDERER_GRAYSCALE_THRESHOLD) << 1 | (pixel2_gray > LIBRENDERER_GRAYSCALE_THRESHOLD);
-            switch(char_state) {
-                case 0: // 0b00
-                    putchar(' ');
-                    break;
-                case 1: // 0b01
-                    printf(LOWER_HALF_BLOCK);
-                    break;
-                case 2: // 0b10
-                    printf(UPPER_HALF_BLOCK);
-                    break;
-                case 3: // 0b11
-                    printf(FULL_BLOCK);
-                    break;
-            }
-            #else // We have true-color support
-            // set text background color to pixel 1 color
-            printf("\033[48;2;%d;%d;%dm", pixel1.r, pixel1.g, pixel1.b);
-            // set text foreground color to pixel 2 color
-            printf("\033[38;2;%d;%d;%dm", pixel2.r, pixel2.g, pixel2.b);
-            printf(LOWER_HALF_BLOCK);
-            #endif // LIBRENDERER_NOCOLOR
+                uint8_t char_state = (pixel1_gray > LIBRENDERER_GRAYSCALE_THRESHOLD) << 1 | (pixel2_gray > LIBRENDERER_GRAYSCALE_THRESHOLD);
+                switch(char_state) {
+                    case 0: // 0b00
+                        putchar(' ');
+                        break;
+                    case 1: // 0b01
+                        printf(LOWER_HALF_BLOCK);
+                        break;
+                    case 2: // 0b10
+                        printf(UPPER_HALF_BLOCK);
+                        break;
+                    case 3: // 0b11
+                        printf(FULL_BLOCK);
+                        break;
+                }
+            #elif LIBRENDERER_COLOR_MODE == 0x8
+                (void)pixel1; (void)pixel2;
+                __TODO("8 bit color");
+            #elif LIBRENDERER_COLOR_MODE == 0x24
+                // set text background color to pixel 1 color
+                printf("\033[48;2;%d;%d;%dm", pixel1.r, pixel1.g, pixel1.b);
+                // set text foreground color to pixel 2 color
+                printf("\033[38;2;%d;%d;%dm", pixel2.r, pixel2.g, pixel2.b);
+                printf(LOWER_HALF_BLOCK);
+            #else
+                (void)pixel1; (void)pixel2;
+                __ERROR("invalid color mode");
+            #endif // LIBRENDERER_COLOR_MODE
+
         }
         printf("\033[0m"VERTICAL_BAR"\n");
     }
