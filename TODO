@@ -1,3 +1,8 @@
+8 bit color rendering mode (\033[{31;37}m) with ansi escapes
+    convert full 24bit color to corresponding color code
+
+allow disabling frame via macro
+
 how to put text on screen????
     function to put text on screen, use ansi escapes to move to correct start position of text
     enum for wordwrap LIBRENDERER_TEXT_WRAP_{CHARS,WORDS,NONE} (whether to do character/word wrapping, or none[end str if out of screen])
