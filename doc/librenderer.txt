@@ -1,0 +1,238 @@
+
+    ┌──────────────────────────────┐
+    │ librenderer documentation    │
+    │                              │
+    │ made with ♡ by heliumhydride │
+    └──────────────────────────────┘
+
+    this file contains utf-8 characters
+    sorry if your terminal doesn't support these features
+
+    TABLE OF CONTENTS
+        1. Preface
+        2. Usage guide
+            2.1  A runtime note for MS/Windows
+        3. Manipulating display contexts
+        4. Optional macros
+        5. Available functions
+            5.1  librenderer_initdisplay()
+            5.2  librenderer_showdisplay()
+            5.3  librenderer_plotpixel()
+            5.4  librenderer_destroydisplay()
+            5.5  librenderer_resetdisplay()
+            5.6  librenderer_clear_color_display()
+            5.7  librenderer_drawline()
+            5.8  librenderer_resizedisplay()
+            5.9  librenderer_drawrect()
+            5.10 librenderer_drawcircle()
+            5.11 helper functions
+                5.11.1 librenderer_helper_swapi()
+                5.11.2 librenderer_helper_absi()
+        6. Typedefs
+            6.1 librenderer_displaycontext_t
+            6.2 librenderer_pixel_t
+            6.3 librenderer_shape_style
+
+
+    1. Preface
+
+        This documentation is a simple UTF-8 text, fully understandable (hopefully),
+        handcrafted and carefully written by a CS student who writes documentation for
+        his random projects instead of listening to his CS classes (don't tell my teach pls)
+
+        Beware that this library is subject to potentially extremely breaking changes in the future,
+        for example the librenderer_displaycontext_t struct could well be modified
+
+
+    2. Usage guide
+
+        Like your average single-header library:
+           1. Put librenderer.h in somewhere your project tree.
+           2. Define the LIBRENDERER_IMPLEMENTATION macro
+           3. Finally, include librenderer.h.
+        
+        Optionally, before including librenderer.h, you can define other macros that adjust certain settings of the library. [4]
+
+            2.1  A runtime note for MS/Windows
+
+                On Windows, librenderer may look broken out of the box, because by
+                default it uses UTF-8 characters and ANSI escape codes, which by
+                default don't work on Windows' conhost.
+
+                To fix UTF-8 support, run
+                    chcp 65001
+
+                And for ANSI escapes, either use ANSICON to extend the system conhost,
+                or switch to ConEmu, Windows Terminal, mintty, ...
+
+    3. Manipulating display contexts
+
+        Display contexts can be
+            created   (allocated)   [5.1]
+            destroyed (freed)       [5.4]
+            resized   (reallocated) [5.8]
+
+
+    4. Optional macros
+
+        MACRO                           │ PURPOSE
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        LIBRENDERER_IMPLEMENTATION      │ Required.
+       ─────────────────────────────────┼───────────────────────────────────────────────────────────
+        LIBRENDERER_NOPREFIX            │ Strips prefix off of types, functions, enums.
+                                        │     e.g.  librenderer_drawline ==> drawline
+       ─────────────────────────────────┼───────────────────────────────────────────────────────────
+        LIBRENDERER_NO_UTF8             │ Set this for terminals not supporting UTF-8 sequences
+                                        │ That means that pixels will be rendered using ASCII chars
+                                        │ However it might be more difficult to see the pixels
+       ─────────────────────────────────┼───────────────────────────────────────────────────────────
+        LIBRENDERER_COLOR_MODE          │ Values:
+                                        │       0x24    24-bit RGB color (default)
+                                        │       0x8     8-bit ANSI color
+                                        │       0x0     Black and white
+       ─────────────────────────────────┼───────────────────────────────────────────────────────────
+        LIBRENDERER_GRAYSCALE_THRESHOLD │ Always set, default 40
+                                        │ At which brightness level (0;255) a pixel is
+                                        │ considered bright and should be displayed.
+                                        │ Does nothing if LIBRENDERER_COLOR_MODE != 0
+       ─────────────────────────────────┼───────────────────────────────────────────────────────────
+        LIBRENDERER_NOFRAME             │ Disables the frame around the display
+                                        │ 
+                                        │ 
+
+    5. Available functions
+        5.1  librenderer_initdisplay()
+        
+            Allocates a display context on the heap and returns it.
+            Make sur to destroy [5.4] it when done!
+
+            Definition
+                librenderer_displaycontext_t librenderer_initdisplay(size_t width, size_t height);
+
+        5.2  librenderer_showdisplay()
+
+            This function clears the terminal and renders a display.
+
+            Definition
+                void librenderer_showdisplay(librenderer_displaycontext_t display);
+
+        5.3  librenderer_plotpixel()
+
+            Plot a pixel of a specific color on a display at position (x,y)
+
+            Definition
+                void librenderer_plotpixel(librenderer_displaycontext_t* dp, uint32_t color, int x, int y);
+
+        5.4  librenderer_destroydisplay()
+
+            Frees a display from the heap.
+            Equivalent to  free(display.data);
+
+            Definition
+                void librenderer_destroydisplay(librenderer_displaycontext_t* dp);
+
+        5.5  librenderer_resetdisplay()
+
+            Clear the display to its original zero initialized state
+            Equivalent to  librenderer_clear_color_display(dp, 0);
+
+            Definition
+                void librenderer_resetdisplay(librenderer_displaycontext_t* dp);
+
+        5.6  librenderer_clear_color_display()
+
+            Clears the display with a given color as the background
+
+            Definition
+                void librenderer_clear_color_display(librenderer_displaycontext_t* dp, uint32_t color);
+
+        5.7  librenderer_drawline()
+
+            Draws a colored line between two coordinates (x₀,y₀) and (x₁,y₁)
+
+            Definition
+                void librenderer_drawline(librenderer_displaycontext_t* dp, uint32_t color, int x0, int y0, int x1, int y1);
+
+        5.8  librenderer_resizedisplay()
+
+            Resizes a dispay to a new width and height
+
+            Definition
+                void librenderer_resizedisplay(librenderer_displaycontext_t* dp, size_t width, size_t height);
+
+        5.9  librenderer_drawrect()
+
+            Draws a colored rectangle at (x,y), starting from the left corner, of size width*height
+            Specify a style of the shape [6.3]
+
+            Definition
+                void librenderer_drawrect(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, unsigned int width, unsigned int height, librenderer_shape_style style);
+
+        5.10 librenderer_drawcircle()
+        
+            Draws a colored circle starting at (x,y), the center, of radius r.
+            Specify a style of the shape [6.3]
+
+            Definition
+                void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, int x, int y, int radius, librenderer_shape_style style);
+
+        5.11 helper functions
+            5.11.1 librenderer_helper_swapi()
+
+                Swaps two integers
+
+                Definition
+                    void librenderer_helper_swapi(int* a, int* b);
+
+            5.11.2 librenderer_helper_absi()
+
+                Gives the absolute value of a signed integer
+
+                Definition
+                    int librenderer_helper_absi(int a);
+
+
+    6. Typedefs 
+        
+        6.1 librenderer_displaycontext_t
+
+            Structure
+
+            A display context is defined by a width (size_t), a height (size_t),
+            and an array of pixels [6.2]
+            You can use librenderer_initdisplay() [5.1] to create a display, see Example
+
+            Example:
+
+                librenderer_displaycontext_t Display = librenderer_initdisplay(size_t,size_t);
+
+        6.2 librenderer_pixel_t
+
+            Structure
+
+            A pixel is defined by 3 bytes (3 uint8_t)
+            One for the red color channel, one for green and one for blue
+            Normally not needed on its own in a program, but needs to be documented
+
+            Example:
+
+                librenderer_pixel_t p = {255,255,255};
+
+        6.3 librenderer_shape_style
+
+            Enumeration
+
+            Used for librenderer_drawrect() and librenderer_drawcircle()
+            to determine whether to draw the shape filled or empty
+
+            Pass the parameter LIBRENDERER_SHAPE_FILLED or LIBRENDERER_SHAPE_EMPTY
+            to these functions
+
+            Like the lowercase variant, the 'LIBRENDERER_' prefix can
+            be stripped by defining LIBRENDERER_NOPREFIX
+
+            Example:
+
+                librenderer_drawrect(&Display, 0xFFFFFF, 10, 10, 20, 20, LIBRENDERER_SHAPE_FILLED);
+
+
