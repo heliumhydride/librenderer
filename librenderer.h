@@ -72,6 +72,23 @@ void librenderer_drawcircle(librenderer_displaycontext_t* dp, uint32_t color, in
 #define LIBRENDERER_COLOR_MODE 0x24
 #endif
 
+#if LIBRENDERER_COLOR_MODE == 0x8
+    #define LIBRENDERER_ANSI_FGRED     "\033[1;31m"
+    #define LIBRENDERER_ANSI_FGGREEN   "\033[1;32m"
+    #define LIBRENDERER_ANSI_FGYELLOW  "\033[1;33m"
+    #define LIBRENDERER_ANSI_FGBLUE    "\033[1;34m"
+    #define LIBRENDERER_ANSI_FGMAGENTA "\033[1;35m"
+    #define LIBRENDERER_ANSI_FGCYAN    "\033[1;36m"
+    #define LIBRENDERER_ANSI_FGWHITE   "\033[1;37m"
+    #define LIBRENDERER_ANSI_BGRED     "\033[1;41m"
+    #define LIBRENDERER_ANSI_BGGREEN   "\033[1;42m"
+    #define LIBRENDERER_ANSI_BGYELLOW  "\033[1;43m"
+    #define LIBRENDERER_ANSI_BGBLUE    "\033[1;44m"
+    #define LIBRENDERER_ANSI_BGMAGENTA "\033[1;45m"
+    #define LIBRENDERER_ANSI_BGCYAN    "\033[1;46m"
+    #define LIBRENDERER_ANSI_BGWHITE   "\033[1;47m"
+#endif
+
 #ifdef LIBRENDERER_NO_UTF8
     #define UPPER_HALF_BLOCK   "^"
     #define LOWER_HALF_BLOCK   "_"
